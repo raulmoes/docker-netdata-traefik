@@ -1,0 +1,37 @@
+version: '3'
+services:
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: netdata.systeminfo.es # set to fqdn of host
+    expose:
+      - 19999
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    networks:
+      - web
+    labels:
+      - traefik.http.routers.netdata.rule=Host(`yourdomainaccess`)
+      - traefik.http.routers.netdata.tls=true
+      - traefik.http.routers.netdata.tls.certresolver=lets-encrypt
+#     - traefik.port=80      
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
+
+networks:
+  web:
+   external: true
