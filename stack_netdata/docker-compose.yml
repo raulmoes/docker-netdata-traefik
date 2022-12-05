@@ -3,7 +3,7 @@ services:
   netdata:
     image: netdata/netdata
     container_name: netdata
-    hostname: netdata.systeminfo.es # set to fqdn of host
+    hostname:  # set to fqdn of host
     expose:
       - 19999
     restart: unless-stopped
